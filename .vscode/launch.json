@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-CarwashApplication<carwash>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "br.com.ccseapps.carwash.CarwashApplication",
+            "projectName": "carwash",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}
