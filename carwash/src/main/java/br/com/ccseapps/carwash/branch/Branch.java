@@ -1,22 +1,21 @@
-package br.com.ccseapps.carwash.company;
+package br.com.ccseapps.carwash.branch;
 
-import java.util.List;
 import java.util.Objects;
 import java.util.stream.Stream;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
-import br.com.ccseapps.carwash.branch.Branch;
-import jakarta.persistence.CascadeType;
+import br.com.ccseapps.carwash.company.Company;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 
 @Entity
-public class Company {
+public class Branch {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -25,21 +24,14 @@ public class Company {
     @Column(nullable = false)
     private String name;
 
-    @OneToMany(mappedBy = "company", cascade = CascadeType.ALL)
-    @JsonManagedReference
-    private List<Branch> branches;
+    @ManyToOne
+    @JoinColumn(name = "company_id")
+    @JsonBackReference
+    private Company company;
 
     public boolean hasNullMandatoryField() {
-        return Stream.of(name)
+        return Stream.of(name, company)
                 .anyMatch(Objects::isNull);
-    }
-
-    public Company(Integer id) {
-        this.id = id;
-    }
-
-    public Company() {
-
     }
 
     public Integer getId() {
@@ -58,12 +50,11 @@ public class Company {
         this.name = name;
     }
 
-    public List<Branch> getBranches() {
-        return branches;
+    public Company getCompany() {
+        return company;
     }
 
-    public void setBranches(List<Branch> branches) {
-        this.branches = branches;
+    public void setCompany(Company company) {
+        this.company = company;
     }
-
 }
