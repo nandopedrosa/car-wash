@@ -29,6 +29,11 @@ public class ServiceTypeController {
         return service.getAllServiceTypesFromCompany(companyId);
     }
 
+    @GetMapping("/branches/{branchId}/servicetypes")
+    public List<ServiceType> getAllServiceTypesFromBranch(@PathVariable Integer branchId) {
+        return service.getAllServiceTypesFromCompany(branchId);
+    }
+
     @PostMapping("/companies/{companyId}/servicetypes")
     public Validation addServiceType(@RequestBody ServiceType serviceType, @PathVariable Integer companyId) {
         return service.addServiceType(serviceType, companyId);

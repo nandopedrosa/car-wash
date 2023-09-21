@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.ccseapps.carwash.servicetype.ServiceType;
 import br.com.ccseapps.carwash.util.Validation;
 
 @RestController
@@ -22,6 +23,11 @@ public class BranchController {
     @GetMapping("/companies/{companyId}/branches")
     public List<Branch> getAllBranchesFromCompany(@PathVariable Integer companyId) {
         return service.getAllBranchesFromCompany(companyId);
+    }
+
+    @GetMapping("/branches/{branchId}/serviceTypes")
+    public List<ServiceType> getAllServiceTypesFromBranch(@PathVariable Integer branchId) {
+        return service.getAllServiceTypesFromBranch(branchId);
     }
 
     @GetMapping("/branches/{id}")

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import br.com.ccseapps.carwash.company.Company;
 import br.com.ccseapps.carwash.servicetype.ServiceType;
+import br.com.ccseapps.carwash.servicetype.ServiceTypeRepository;
 import br.com.ccseapps.carwash.servicetype.ServiceTypeService;
 import br.com.ccseapps.carwash.util.Status;
 import br.com.ccseapps.carwash.util.Validation;
@@ -17,6 +18,9 @@ public class BranchService {
 
     @Autowired
     private BranchRepository repo;
+
+    @Autowired
+    private ServiceTypeRepository serviceTypeRepo;
 
     @Autowired
     private ServiceTypeService serviceTypeService;
@@ -65,6 +69,13 @@ public class BranchService {
         // st.addBranch(b);
         repo.save(b);
         return new Validation("Service Type successfully added to Branch", Status.OK);
+    }
+
+    public List<ServiceType> getAllServiceTypesFromBranch(Integer branchId) {
+        List<ServiceType> serviceTypes = new ArrayList<>();
+        Branch branch = getBranch(branchId);
+        serviceTypeRepo.findByBranches(branch).forEach(serviceTypes::add);
+        return serviceTypes;
     }
 
 }

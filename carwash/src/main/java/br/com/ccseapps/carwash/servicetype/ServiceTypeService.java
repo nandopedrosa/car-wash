@@ -43,6 +43,7 @@ public class ServiceTypeService {
         repo.findByCompanyId(companyId).forEach(serviceTypes::add);
         return serviceTypes;
     }
+  
 
     public ServiceType getServiceType(Integer id) {
         return repo.findById(id).orElse(null);
