@@ -7,6 +7,7 @@ import java.util.stream.Stream;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import br.com.ccseapps.carwash.branch.Branch;
+import br.com.ccseapps.carwash.servicetype.ServiceType;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -25,9 +26,13 @@ public class Company {
     @Column(nullable = false)
     private String name;
 
-    @OneToMany(mappedBy = "company", cascade = CascadeType.ALL)
-    @JsonManagedReference
+    @OneToMany(mappedBy = "company", cascade = CascadeType.REMOVE)
+    @JsonManagedReference(value = "company-branch")
     private List<Branch> branches;
+
+    @OneToMany(mappedBy = "company", cascade = CascadeType.REMOVE)
+    @JsonManagedReference(value = "company-servicetypes")
+    private List<ServiceType> serviceTypes;
 
     public boolean hasNullMandatoryField() {
         return Stream.of(name)
@@ -64,6 +69,14 @@ public class Company {
 
     public void setBranches(List<Branch> branches) {
         this.branches = branches;
+    }
+
+    public List<ServiceType> getServiceTypes() {
+        return serviceTypes;
+    }
+
+    public void setServiceTypes(List<ServiceType> serviceTypes) {
+        this.serviceTypes = serviceTypes;
     }
 
 }

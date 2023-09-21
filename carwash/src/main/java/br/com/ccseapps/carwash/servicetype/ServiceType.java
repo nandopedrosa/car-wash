@@ -1,24 +1,24 @@
-package br.com.ccseapps.carwash.branch;
+package br.com.ccseapps.carwash.servicetype;
 
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Stream;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+
+import br.com.ccseapps.carwash.branch.Branch;
 import br.com.ccseapps.carwash.company.Company;
-import br.com.ccseapps.carwash.servicetype.ServiceType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 
 @Entity
-public class Branch {
+public class ServiceType {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -27,18 +27,20 @@ public class Branch {
     @Column(nullable = false)
     private String name;
 
+    @Column(nullable = false)
+    private Double price;
+
+    // @ManyToMany(mappedBy = "serviceTypes")
+    // @JsonBackReference(value = "branch-servicetypes")
+    // private List<Branch> branches;
+
     @ManyToOne
     @JoinColumn(name = "company_id", nullable = false)
-    @JsonBackReference(value = "company-branch")
+    @JsonBackReference(value = "company-servicetypes")
     private Company company;
 
-    @ManyToMany
-    @JoinTable(name = "branch_service_type", joinColumns = @JoinColumn(name = "branch_id"), inverseJoinColumns = @JoinColumn(name = "service_type_id"))
-    // @JsonManagedReference(value = "branch-servicetypes")
-    private List<ServiceType> serviceTypes;
-
     public boolean hasNullMandatoryField() {
-        return Stream.of(name, company)
+        return Stream.of(name, price, company)
                 .anyMatch(Objects::isNull);
     }
 
@@ -58,23 +60,33 @@ public class Branch {
         this.name = name;
     }
 
+    public Double getPrice() {
+        return price;
+    }
+
+    public void setPrice(Double price) {
+        this.price = price;
+    }
+
+    /*
+     * public List<Branch> getBranches() {
+     * return branches;
+     * }
+     * 
+     * public void setBranches(List<Branch> branches) {
+     * this.branches = branches;
+     * }
+     * 
+     * public void addBranch(Branch branch) {
+     * this.branches.add(branch);
+     * }
+     */
+
     public Company getCompany() {
         return company;
     }
 
     public void setCompany(Company company) {
         this.company = company;
-    }
-
-    public List<ServiceType> getServiceTypes() {
-        return serviceTypes;
-    }
-
-    public void setServiceTypes(List<ServiceType> serviceTypes) {
-        this.serviceTypes = serviceTypes;
-    }
-
-    public void addServiceType(ServiceType serviceType) {
-        this.serviceTypes.add(serviceType);
     }
 }

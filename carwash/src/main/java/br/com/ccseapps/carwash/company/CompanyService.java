@@ -41,7 +41,8 @@ public class CompanyService {
     }
 
     public Company getCompany(Integer id) {
-        return repo.findById(id).orElse(null);
+        Company c = repo.findById(id).orElse(null);
+        return c;
     }
 
     public Validation deleteCompany(Integer id) {

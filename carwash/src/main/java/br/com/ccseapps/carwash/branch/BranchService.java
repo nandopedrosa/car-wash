@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import br.com.ccseapps.carwash.company.Company;
+import br.com.ccseapps.carwash.servicetype.ServiceType;
+import br.com.ccseapps.carwash.servicetype.ServiceTypeService;
 import br.com.ccseapps.carwash.util.Status;
 import br.com.ccseapps.carwash.util.Validation;
 
@@ -15,6 +17,9 @@ public class BranchService {
 
     @Autowired
     private BranchRepository repo;
+
+    @Autowired
+    private ServiceTypeService serviceTypeService;
 
     public Validation addBranch(Branch branch, Integer companyId) {
         branch.setCompany(new Company(companyId));
@@ -51,6 +56,15 @@ public class BranchService {
     public Validation deleteBranch(Integer id) {
         repo.deleteById(id);
         return new Validation("Branch successfully deleted.", Status.OK);
+    }
+
+    public Validation addServiceTypeToBranch(Integer branchId, Integer serviceTypeId) {
+        Branch b = this.getBranch(branchId);
+        ServiceType st = serviceTypeService.getServiceType(serviceTypeId);
+        b.addServiceType(st);
+        // st.addBranch(b);
+        repo.save(b);
+        return new Validation("Service Type successfully added to Branch", Status.OK);
     }
 
 }

@@ -19,7 +19,7 @@ public class BranchController {
     @Autowired
     private BranchService service;
 
-    @GetMapping("/company/{companyId}/branches")
+    @GetMapping("/companies/{companyId}/branches")
     public List<Branch> getAllBranchesFromCompany(@PathVariable Integer companyId) {
         return service.getAllBranchesFromCompany(companyId);
     }
@@ -30,19 +30,25 @@ public class BranchController {
         return branch;
     }
 
-    @PostMapping("/company/{companyId}/branches")
+    @PostMapping("/companies/{companyId}/branches")
     public Validation addBranch(@RequestBody Branch branch, @PathVariable Integer companyId) {
         return service.addBranch(branch, companyId);
     }
 
-    @PutMapping("/company/{companyId}/branches/{branchId}")
+    @PutMapping("/companies/{companyId}/branches/{branchId}")
     public Validation updateBranch(@RequestBody Branch branch, @PathVariable Integer companyId,
             @PathVariable Integer branchId) {
         return service.updateBranch(branch, companyId, branchId);
     }
 
-    @DeleteMapping("/branch/{id}")
+    @DeleteMapping("/branches/{id}")
     public Validation deleteBranch(@PathVariable Integer id) {
         return service.deleteBranch(id);
     }
+
+    @PostMapping("/branches/{branchId}/servicetypes/{serviceTypeId}")
+    public Validation addServiceTypeToBranch(@PathVariable Integer branchId, @PathVariable Integer serviceTypeId) {
+        return service.addServiceTypeToBranch(branchId, serviceTypeId);
+    }
+
 }
