@@ -5,17 +5,21 @@ import java.util.Objects;
 import java.util.stream.Stream;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import br.com.ccseapps.carwash.branch.Branch;
 import br.com.ccseapps.carwash.company.Company;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.UniqueConstraint;
 
 @Entity
 public class ServiceType {
@@ -30,9 +34,13 @@ public class ServiceType {
     @Column(nullable = false)
     private Double price;
 
-    // @ManyToMany(mappedBy = "serviceTypes")
-    // @JsonBackReference(value = "branch-servicetypes")
-    // private List<Branch> branches;
+    @ManyToMany(cascade = CascadeType.REMOVE)
+    @JoinTable(name = "branch_service_type", 
+    joinColumns = @JoinColumn(name = "service_type_id", referencedColumnName = "id"), 
+    inverseJoinColumns = @JoinColumn(name = "branch_id",referencedColumnName = "id"),
+    uniqueConstraints={@UniqueConstraint(columnNames={"service_type_id","branch_id"})})
+    @JsonIgnoreProperties("serviceTypes")
+    private List<Branch> branches;
 
     @ManyToOne
     @JoinColumn(name = "company_id", nullable = false)
@@ -68,19 +76,19 @@ public class ServiceType {
         this.price = price;
     }
 
-    /*
-     * public List<Branch> getBranches() {
-     * return branches;
-     * }
-     * 
-     * public void setBranches(List<Branch> branches) {
-     * this.branches = branches;
-     * }
-     * 
-     * public void addBranch(Branch branch) {
-     * this.branches.add(branch);
-     * }
-     */
+    
+     public List<Branch> getBranches() {
+     return branches;
+     }
+     
+     public void setBranches(List<Branch> branches) {
+     this.branches = branches;
+     }
+     
+     public void addBranch(Branch branch) {
+     this.branches.add(branch);
+     }
+    
 
     public Company getCompany() {
         return company;

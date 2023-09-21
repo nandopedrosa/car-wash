@@ -5,8 +5,11 @@ import java.util.Objects;
 import java.util.stream.Stream;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import br.com.ccseapps.carwash.company.Company;
 import br.com.ccseapps.carwash.servicetype.ServiceType;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -16,6 +19,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.UniqueConstraint;
 
 @Entity
 public class Branch {
@@ -32,9 +36,13 @@ public class Branch {
     @JsonBackReference(value = "company-branch")
     private Company company;
 
-    @ManyToMany
-    @JoinTable(name = "branch_service_type", joinColumns = @JoinColumn(name = "branch_id"), inverseJoinColumns = @JoinColumn(name = "service_type_id"))
-    // @JsonManagedReference(value = "branch-servicetypes")
+    //see http://bartoszkomin.blogspot.com/2017/01/many-to-many-relation-with-hibernate.html
+    @ManyToMany(cascade = CascadeType.REMOVE)
+    @JoinTable(name = "branch_service_type", 
+    joinColumns = @JoinColumn(name = "branch_id", referencedColumnName = "id"), 
+    inverseJoinColumns = @JoinColumn(name = "service_type_id",referencedColumnName = "id"),
+    uniqueConstraints={@UniqueConstraint(columnNames={"branch_id", "service_type_id"})})
+    @JsonIgnoreProperties("branches")
     private List<ServiceType> serviceTypes;
 
     public boolean hasNullMandatoryField() {
