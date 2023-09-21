@@ -1,21 +1,26 @@
 package br.com.ccseapps.carwash.user;
 
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import br.com.ccseapps.carwash.util.Role;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import jakarta.persistence.Transient;
 
 @Entity
-@Table(name = "APP_USER")
-public class User {
+@Table(name = "app_user")
+public class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -27,17 +32,48 @@ public class User {
     @Column(nullable = false)
     private String name;
 
-    @Transient
+    @Column(nullable = false)
     private String password;
 
     @Column(nullable = false)
-    private String passwordHash;
+    private String roles;
 
-    @Enumerated(EnumType.STRING)
-    private Role role;
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        List<GrantedAuthority> authorities = Arrays.stream(getRoles().split(","))
+                .map(SimpleGrantedAuthority::new)
+                .collect(Collectors.toList());
+        return authorities;
+    }
+
+    @Override
+    public String getUsername() {
+        // email in our case
+        return email;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
 
     public boolean hasNullMandatoryField() {
-        return Stream.of(email, name, password, role)
+        return Stream.of(email, name, password, roles)
                 .anyMatch(Objects::isNull);
     }
 
@@ -73,20 +109,12 @@ public class User {
         this.password = pomba;
     }
 
-    public String getPasswordHash() {
-        return passwordHash;
+    public String getRoles() {
+        return roles;
     }
 
-    public void setPasswordHash(String passwordHash) {
-        this.passwordHash = passwordHash;
-    }
-
-    public Role getRole() {
-        return role;
-    }
-
-    public void setRole(Role role) {
-        this.role = role;
+    public void setRoles(String roles) {
+        this.roles = roles;
     }
 
 }

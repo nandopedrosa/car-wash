@@ -29,7 +29,7 @@ public class CompanyController {
         return service.getCompany(id);
     }
 
-    @PostMapping("/companies")
+    @PostMapping("/companies")    
     public Validation addCompany(@RequestBody Company c) {
         return service.addCompany(c);
     }
