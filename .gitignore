@@ -26,3 +26,5 @@ replay_pid*
 # My ignores
 car-wash-win.code-workspace
 .env
+car-wash-mac.code-workspace
+
