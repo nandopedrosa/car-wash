@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.ccseapps.carwash.servicetype.ServiceType;
 import br.com.ccseapps.carwash.util.Validation;
+import jakarta.annotation.security.RolesAllowed;
 
 @RestController
 public class BranchController {
@@ -20,40 +21,47 @@ public class BranchController {
     @Autowired
     private BranchService service;
 
+    @RolesAllowed({"ADMIN", "CUSTOMER"})
     @GetMapping("/companies/{companyId}/branches")
     public List<Branch> getAllBranchesFromCompany(@PathVariable Integer companyId) {
         return service.getAllBranchesFromCompany(companyId);
     }
 
-    @GetMapping("/branches/{branchId}/serviceTypes")
-    public List<ServiceType> getAllServiceTypesFromBranch(@PathVariable Integer branchId) {
+    @RolesAllowed({"ADMIN", "CUSTOMER"})
+    @GetMapping("companies/{companyId}/branches/{branchId}/serviceTypes")
+    public List<ServiceType> getAllServiceTypesFromBranch(@PathVariable Integer companyId, @PathVariable Integer branchId) {
         return service.getAllServiceTypesFromBranch(branchId);
     }
 
-    @GetMapping("/branches/{id}")
-    public Branch getBranch(@PathVariable Integer id) {
-        Branch branch = service.getBranch(id);
+    @RolesAllowed({"ADMIN", "CUSTOMER"})
+    @GetMapping("/companies/{companyId}/branches/{branchId}")
+    public Branch getBranch(@PathVariable Integer companyId, @PathVariable Integer branchId) {
+        Branch branch = service.getBranch(branchId);
         return branch;
     }
 
+    @RolesAllowed("ADMIN")
     @PostMapping("/companies/{companyId}/branches")
     public Validation addBranch(@RequestBody Branch branch, @PathVariable Integer companyId) {
         return service.addBranch(branch, companyId);
     }
 
+    @RolesAllowed("ADMIN")
     @PutMapping("/companies/{companyId}/branches/{branchId}")
     public Validation updateBranch(@RequestBody Branch branch, @PathVariable Integer companyId,
             @PathVariable Integer branchId) {
         return service.updateBranch(branch, companyId, branchId);
     }
 
-    @DeleteMapping("/branches/{id}")
-    public Validation deleteBranch(@PathVariable Integer id) {
-        return service.deleteBranch(id);
+    @RolesAllowed("ADMIN")
+    @DeleteMapping("/companies/{companyId}/branches/{branchId}")
+    public Validation deleteBranch(@PathVariable Integer companyId, @PathVariable Integer branchId) {
+        return service.deleteBranch(branchId);
     }
 
-    @PostMapping("/branches/{branchId}/servicetypes/{serviceTypeId}")
-    public Validation addServiceTypeToBranch(@PathVariable Integer branchId, @PathVariable Integer serviceTypeId) {
+    @RolesAllowed("ADMIN")
+    @PostMapping("companies/{companyId}/branches/{branchId}/servicetypes/{serviceTypeId}")
+    public Validation addServiceTypeToBranch(@PathVariable Integer companyId, @PathVariable Integer branchId, @PathVariable Integer serviceTypeId) {
         return service.addServiceTypeToBranch(branchId, serviceTypeId);
     }
 

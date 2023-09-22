@@ -43,7 +43,6 @@ public class ServiceTypeService {
         repo.findByCompanyId(companyId).forEach(serviceTypes::add);
         return serviceTypes;
     }
-  
 
     public ServiceType getServiceType(Integer id) {
         return repo.findById(id).orElse(null);
@@ -54,4 +53,5 @@ public class ServiceTypeService {
         return new Validation("Service Type successfully deleted.", Status.OK);
     }
 
+    
 }

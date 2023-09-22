@@ -12,41 +12,36 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.ccseapps.carwash.util.Validation;
+import jakarta.annotation.security.RolesAllowed;
 
 @RestController
 public class ServiceTypeController {
 
     @Autowired
     private ServiceTypeService service;
-
-    @GetMapping("/servicetypes/{id}")
-    public ServiceType getServiceType(@PathVariable Integer id) {
-        return service.getServiceType(id);
-    }
-
+      
+    @RolesAllowed({"ADMIN", "CUSTOMER"})
     @GetMapping("/companies/{companyId}/servicetypes")
     public List<ServiceType> getAllServiceTypesFromCompany(@PathVariable Integer companyId) {
         return service.getAllServiceTypesFromCompany(companyId);
     }
 
-    @GetMapping("/branches/{branchId}/servicetypes")
-    public List<ServiceType> getAllServiceTypesFromBranch(@PathVariable Integer branchId) {
-        return service.getAllServiceTypesFromCompany(branchId);
-    }
-
+    @RolesAllowed("ADMIN")
     @PostMapping("/companies/{companyId}/servicetypes")
     public Validation addServiceType(@RequestBody ServiceType serviceType, @PathVariable Integer companyId) {
         return service.addServiceType(serviceType, companyId);
     }
 
+    @RolesAllowed("ADMIN")
     @PutMapping("/companies/{companyId}/servicetypes/{id}")
     public Validation updateServiceType(@RequestBody ServiceType serviceType, @PathVariable Integer id,
             @PathVariable Integer companyId) {
         return service.updateServiceType(serviceType, id, companyId);
     }
 
-    @DeleteMapping("/servicetypes/{id}")
-    public Validation deleteServiceType(@PathVariable Integer id) {
-        return service.deleteServiceType(id);
+    @RolesAllowed("ADMIN")
+    @DeleteMapping("/companies/{companyId}/servicetypes/{serviceTypeId}")
+    public Validation deleteServiceType(@PathVariable Integer companyId, @PathVariable Integer serviceTypeId) {
+        return service.deleteServiceType(serviceTypeId);
     }
 }

@@ -9,6 +9,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -21,6 +22,8 @@ import br.com.ccseapps.carwash.user.UserService;
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity(prePostEnabled = true, securedEnabled = true, 
+jsr250Enabled = true)
 public class SecurityConfiguration {
     @Autowired
     private JwtAuthenticationFilter jwtAuthenticationFilter;
@@ -34,12 +37,8 @@ public class SecurityConfiguration {
         http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(
                     request ->                                                            
-                    request                    
-                    .requestMatchers("/hello").hasAuthority("CUSTOMER")
-                    .requestMatchers("/users/**").hasAuthority("CUSTOMER")
-                    .requestMatchers("/companies/**").hasAuthority("ADMIN")             
-                    .requestMatchers("/auth/**").permitAll()
-                    .requestMatchers("/**").denyAll()
+                    request                                               
+                    .requestMatchers("/auth/**").permitAll()                                        
                     .anyRequest().authenticated()
                 )             
                 .sessionManagement(manager -> manager.sessionCreationPolicy(STATELESS))
