@@ -34,13 +34,14 @@ public class SecurityConfiguration {
         http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(
                     request ->                                                            
-                    request                                                          
+                    request                    
                     .requestMatchers("/hello").hasAuthority("CUSTOMER")
-                    .requestMatchers("/companies").hasAuthority("ADMIN")
+                    .requestMatchers("/users/**").hasAuthority("CUSTOMER")
+                    .requestMatchers("/companies/**").hasAuthority("ADMIN")             
                     .requestMatchers("/auth/**").permitAll()
                     .requestMatchers("/**").denyAll()
                     .anyRequest().authenticated()
-                )
+                )             
                 .sessionManagement(manager -> manager.sessionCreationPolicy(STATELESS))
                 .authenticationProvider(authenticationProvider())
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
