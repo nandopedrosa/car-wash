@@ -1,11 +1,15 @@
 package br.com.ccseapps.carwash.vehicle;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.stream.Stream;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
+import br.com.ccseapps.carwash.booking.Booking;
 import br.com.ccseapps.carwash.user.User;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -13,6 +17,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 
 @Entity
 public class Vehicle {
@@ -32,6 +37,10 @@ public class Vehicle {
 
     @Column(nullable = false)
     private String licensePlate;
+
+    @OneToMany(mappedBy = "vehicle", cascade = CascadeType.REMOVE)
+    @JsonManagedReference(value = "vehicle-booking")
+    private List<Booking> bookings;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
@@ -89,6 +98,14 @@ public class Vehicle {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public List<Booking> getBookings() {
+        return bookings;
+    }
+
+    public void setBookings(List<Booking> bookings) {
+        this.bookings = bookings;
     }
 
 }

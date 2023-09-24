@@ -37,6 +37,9 @@ public class ServiceType {
     @Column(nullable = false)
     private Double price;
 
+    @Column(nullable = false)
+    private Integer duration; // in minutes
+
     @OneToMany(mappedBy = "serviceType", cascade = CascadeType.REMOVE)
     @JsonManagedReference(value = "service-type-booking")
     private List<Booking> bookings;
@@ -79,6 +82,14 @@ public class ServiceType {
 
     public void setPrice(Double price) {
         this.price = price;
+    }
+
+    public Integer getDuration() {
+        return duration;
+    }
+
+    public void setDuration(Integer duration) {
+        this.duration = duration;
     }
 
     public List<Branch> getBranches() {

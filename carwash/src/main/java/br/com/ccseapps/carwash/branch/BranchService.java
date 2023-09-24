@@ -1,5 +1,8 @@
 package br.com.ccseapps.carwash.branch;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -76,6 +79,25 @@ public class BranchService {
         Branch branch = getBranch(branchId);
         serviceTypeRepo.findByBranches(branch).forEach(serviceTypes::add);
         return serviceTypes;
+    }
+
+    public List<String> getAllSchedulesForServiceType(Integer branchId, Integer serviceTypeId, String date) {
+        List<String> res = new ArrayList<>();
+        
+        Branch branch = this.getBranch(branchId);
+        ServiceType st = serviceTypeService.getServiceType(serviceTypeId);
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/MM/yyyy");
+        LocalDate localDate = LocalDate.parse(date, formatter);
+
+        List<LocalDateTime> times = branch.getAllSchedulesForServiceType(st, localDate);
+        for(LocalDateTime ldt : times)   {
+            // add 0 padding
+            String minute = ldt.getMinute() == 0 ? "00" : String.valueOf(ldt.getMinute());
+            String s = ldt.getHour() + ":" + minute;
+            res.add(s);
+        }
+        return res;
     }
 
 }

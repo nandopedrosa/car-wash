@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.ccseapps.carwash.servicetype.ServiceType;
@@ -21,19 +22,20 @@ public class BranchController {
     @Autowired
     private BranchService service;
 
-    @RolesAllowed({"ADMIN", "CUSTOMER"})
+    @RolesAllowed({ "ADMIN", "CUSTOMER" })
     @GetMapping("/companies/{companyId}/branches")
     public List<Branch> getAllBranchesFromCompany(@PathVariable Integer companyId) {
         return service.getAllBranchesFromCompany(companyId);
     }
 
-    @RolesAllowed({"ADMIN", "CUSTOMER"})
-    @GetMapping("companies/{companyId}/branches/{branchId}/serviceTypes")
-    public List<ServiceType> getAllServiceTypesFromBranch(@PathVariable Integer companyId, @PathVariable Integer branchId) {
+    @RolesAllowed({ "ADMIN", "CUSTOMER" })
+    @GetMapping("companies/{companyId}/branches/{branchId}/servicetypes")
+    public List<ServiceType> getAllServiceTypesFromBranch(@PathVariable Integer companyId,
+            @PathVariable Integer branchId) {
         return service.getAllServiceTypesFromBranch(branchId);
     }
 
-    @RolesAllowed({"ADMIN", "CUSTOMER"})
+    @RolesAllowed({ "ADMIN", "CUSTOMER" })
     @GetMapping("/companies/{companyId}/branches/{branchId}")
     public Branch getBranch(@PathVariable Integer companyId, @PathVariable Integer branchId) {
         Branch branch = service.getBranch(branchId);
@@ -61,8 +63,16 @@ public class BranchController {
 
     @RolesAllowed("ADMIN")
     @PostMapping("companies/{companyId}/branches/{branchId}/servicetypes/{serviceTypeId}")
-    public Validation addServiceTypeToBranch(@PathVariable Integer companyId, @PathVariable Integer branchId, @PathVariable Integer serviceTypeId) {
+    public Validation addServiceTypeToBranch(@PathVariable Integer companyId, @PathVariable Integer branchId,
+            @PathVariable Integer serviceTypeId) {
         return service.addServiceTypeToBranch(branchId, serviceTypeId);
+    }
+
+    @RolesAllowed({ "ADMIN", "CUSTOMER" })
+    @GetMapping("companies/{companyId}/branches/{branchId}/servicetypes/{serviceTypeId}/schedules")
+    public List<String> getAllSchedulesForServiceType(@PathVariable Integer companyId, @PathVariable Integer branchId,
+            @PathVariable Integer serviceTypeId, @RequestParam("date") String date) {
+        return service.getAllSchedulesForServiceType(branchId, serviceTypeId, date);
     }
 
 }
